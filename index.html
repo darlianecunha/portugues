@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leer Portugees 🇧🇷</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;background:#f9fafb;color:#1f2937;min-height:100vh;display:flex;flex-direction:column}
+
+/* NAV */
+nav{background:linear-gradient(135deg,#059669,#047857);color:#fff;padding:12px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+nav .logo{font-weight:800;font-size:1.2rem;cursor:pointer;white-space:nowrap}
+nav .nav-links{display:flex;gap:4px;flex-wrap:wrap}
+nav button{background:rgba(255,255,255,.15);border:none;color:#fff;padding:8px 14px;border-radius:8px;cursor:pointer;font-size:.85rem;font-weight:600;transition:.2s}
+nav button:hover,nav button.active{background:rgba(255,255,255,.3)}
+.mobile-toggle{display:none;background:none;border:none;color:#fff;font-size:1.5rem;cursor:pointer}
+
+/* HERO */
+.hero{text-align:center;padding:50px 24px 40px;background:linear-gradient(180deg,#ecfdf5,#f9fafb)}
+.hero h1{font-size:2.2rem;color:#1f2937;margin-bottom:8px}
+.hero p{color:#6b7280;font-size:1.05rem}
+
+/* CONTENT */
+.container{max-width:1100px;margin:0 auto;padding:24px;flex:1}
+
+/* HOME GRID */
+.home-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px;margin-top:24px}
+.home-card{background:#fff;border-radius:16px;padding:28px 20px;text-align:center;cursor:pointer;border:1px solid #e5e7eb;transition:.25s;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.home-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.1);border-color:#059669}
+.home-card .icon{font-size:2.5rem;margin-bottom:12px}
+.home-card h3{font-size:1.1rem;color:#1f2937;margin-bottom:6px}
+.home-card p{font-size:.88rem;color:#6b7280}
+
+/* TIP BOX */
+.tip-box{background:linear-gradient(135deg,#d1fae5,#a7f3d0);border-radius:16px;padding:24px;margin-top:32px;text-align:center;border:1px solid #34d399}
+.tip-box h3{color:#065f46;margin-bottom:8px}
+.tip-box p{color:#064e3b;font-size:.95rem}
+
+/* SECTION PAGES */
+.section-page{display:none}
+.section-page.active{display:block}
+.section-page h2{font-size:1.6rem;color:#059669;margin-bottom:20px;padding-bottom:10px;border-bottom:2px solid #a7f3d0}
+
+/* CATEGORY TABS */
+.cat-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.cat-tab{padding:8px 16px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;cursor:pointer;font-size:.85rem;font-weight:600;color:#6b7280;transition:.2s}
+.cat-tab:hover{border-color:#059669;color:#059669}
+.cat-tab.active{background:#059669;color:#fff;border-color:#059669}
+
+/* VOCAB TABLE */
+.vocab-table{width:100%;border-collapse:separate;border-spacing:0;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.vocab-table th{background:linear-gradient(135deg,#059669,#047857);color:#fff;padding:14px 16px;text-align:left;font-size:.9rem}
+.vocab-table td{padding:12px 16px;border-bottom:1px solid #f3f4f6;font-size:.9rem}
+.vocab-table tr:last-child td{border-bottom:none}
+.vocab-table tr:hover td{background:#ecfdf5}
+.vocab-table .nl{color:#1f2937;font-weight:600}
+.vocab-table .pt{color:#059669;font-weight:500}
+.audio-btn{background:none;border:none;cursor:pointer;font-size:1.1rem;padding:2px 6px;border-radius:6px;transition:.15s}
+.audio-btn:hover{background:#d1fae5}
+
+/* QUIZ */
+.quiz-area{max-width:600px;margin:0 auto}
+.quiz-card{background:#fff;border-radius:16px;padding:32px;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,.08);border:1px solid #e5e7eb}
+.quiz-word{font-size:2rem;font-weight:800;color:#059669;margin-bottom:8px}
+.quiz-hint{color:#9ca3af;font-size:.85rem;margin-bottom:24px}
+.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.quiz-opt{padding:14px;border-radius:12px;border:2px solid #e5e7eb;background:#fff;cursor:pointer;font-size:1rem;font-weight:600;transition:.2s}
+.quiz-opt:hover{border-color:#059669;background:#ecfdf5}
+.quiz-opt.correct{background:#d1fae5;border-color:#10b981;color:#065f46}
+.quiz-opt.wrong{background:#fee2e2;border-color:#ef4444;color:#991b1b}
+.quiz-score{margin-top:20px;font-size:1rem;color:#6b7280}
+.quiz-next{margin-top:16px;padding:12px 28px;background:#059669;color:#fff;border:none;border-radius:10px;cursor:pointer;font-weight:700;font-size:1rem;transition:.2s}
+.quiz-next:hover{background:#047857}
+.quiz-dir{display:flex;gap:10px;justify-content:center;margin-bottom:16px}
+.quiz-dir button{padding:8px 16px;border-radius:10px;border:2px solid #e5e7eb;background:#fff;cursor:pointer;font-weight:600;font-size:.85rem;transition:.2s}
+.quiz-dir button.active{background:#059669;color:#fff;border-color:#059669}
+.quiz-dir button:hover{border-color:#059669}
+
+/* WRITE */
+.write-area{max-width:600px;margin:0 auto}
+.write-card{background:#fff;border-radius:16px;padding:32px;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,.08);border:1px solid #e5e7eb;margin-bottom:16px}
+.write-prompt{font-size:1.4rem;font-weight:700;color:#1f2937;margin-bottom:4px}
+.write-lang{color:#9ca3af;font-size:.85rem;margin-bottom:20px}
+.write-input{width:100%;padding:14px;border:2px solid #e5e7eb;border-radius:10px;font-size:1.1rem;text-align:center;outline:none;transition:.2s}
+.write-input:focus{border-color:#059669}
+.write-input.correct{border-color:#10b981;background:#d1fae5}
+.write-input.wrong{border-color:#ef4444;background:#fee2e2}
+.write-answer{margin-top:12px;font-size:.95rem;color:#6b7280}
+.write-btns{display:flex;gap:10px;justify-content:center;margin-top:16px}
+.write-btns button{padding:10px 24px;border-radius:10px;border:none;cursor:pointer;font-weight:700;font-size:.95rem;transition:.2s}
+.btn-check{background:#059669;color:#fff}
+.btn-check:hover{background:#047857}
+.btn-skip{background:#f3f4f6;color:#6b7280}
+.btn-skip:hover{background:#e5e7eb}
+
+/* PHRASES */
+.phrase-card{background:#fff;border-radius:12px;padding:18px 20px;margin-bottom:12px;border-left:4px solid #059669;box-shadow:0 1px 3px rgba(0,0,0,.05);transition:.2s}
+.phrase-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.phrase-nl{font-weight:700;color:#1f2937;font-size:1rem;margin-bottom:4px}
+.phrase-pt{color:#059669;font-size:.95rem}
+
+/* GRAMMAR */
+.grammar-block{background:#fff;border-radius:12px;padding:24px;margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,.06);border:1px solid #e5e7eb}
+.grammar-block h3{color:#059669;margin-bottom:12px;font-size:1.15rem}
+.grammar-block p,.grammar-block li{color:#4b5563;font-size:.92rem;line-height:1.7}
+.grammar-block ul{padding-left:20px;margin-top:8px}
+.grammar-block .example{background:#ecfdf5;padding:10px 14px;border-radius:8px;margin:8px 0;font-style:italic;color:#065f46}
+
+/* FLASHCARDS */
+.flash-area{max-width:500px;margin:0 auto;text-align:center}
+.flashcard{width:100%;min-height:220px;perspective:1000px;cursor:pointer;margin-bottom:20px}
+.flashcard-inner{position:relative;width:100%;height:220px;transition:transform .6s;transform-style:preserve-3d}
+.flashcard.flipped .flashcard-inner{transform:rotateY(180deg)}
+.flashcard-front,.flashcard-back{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:16px;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:24px;box-shadow:0 4px 16px rgba(0,0,0,.1)}
+.flashcard-front{background:linear-gradient(135deg,#059669,#047857);color:#fff}
+.flashcard-back{background:#fff;border:2px solid #059669;transform:rotateY(180deg)}
+.flashcard-front .word{font-size:2rem;font-weight:800}
+.flashcard-front .sub{font-size:.85rem;opacity:.8;margin-top:6px}
+.flashcard-back .word{font-size:2rem;font-weight:800;color:#059669}
+.flashcard-back .sub{font-size:.85rem;color:#9ca3af;margin-top:6px}
+.flash-controls{display:flex;gap:12px;justify-content:center}
+.flash-controls button{padding:10px 24px;border-radius:10px;border:none;cursor:pointer;font-weight:700;transition:.2s}
+.flash-prev{background:#f3f4f6;color:#6b7280}
+.flash-prev:hover{background:#e5e7eb}
+.flash-next{background:#059669;color:#fff}
+.flash-next:hover{background:#047857}
+.flash-counter{margin-top:12px;color:#9ca3af;font-size:.85rem}
+
+/* TIPS */
+.tip-card{background:#fff;border-radius:12px;padding:20px 24px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);border:1px solid #e5e7eb}
+.tip-card h3{color:#059669;font-size:1.05rem;margin-bottom:8px}
+.tip-card p{color:#4b5563;font-size:.92rem;line-height:1.6}
+.tip-card .tip-example{background:#d1fae5;padding:8px 12px;border-radius:8px;margin-top:8px;color:#065f46;font-weight:500}
+
+/* SEARCH */
+.search-bar{margin-bottom:20px}
+.search-bar input{width:100%;padding:12px 16px;border:2px solid #e5e7eb;border-radius:12px;font-size:1rem;outline:none;transition:.2s}
+.search-bar input:focus{border-color:#059669}
+
+/* FOOTER */
+footer{text-align:center;padding:24px;color:#9ca3af;font-size:.85rem;margin-top:auto}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .mobile-toggle{display:block}
+  nav .nav-links{display:none;width:100%}
+  nav .nav-links.open{display:flex;flex-direction:column;gap:4px}
+  .hero h1{font-size:1.6rem}
+  .quiz-options{grid-template-columns:1fr}
+  .home-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:480px){
+  .home-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="logo" onclick="showSection('home')">🇧🇷 Leer Portugees!</span>
+  <button class="mobile-toggle" onclick="toggleMenu()">&#9776;</button>
+  <div class="nav-links">
+    <button class="active" onclick="showSection('home')">🏠 Home</button>
+    <button onclick="showSection('vocab')">📚 Woordenschat</button>
+    <button onclick="showSection('quiz')">🧠 Quiz</button>
+    <button onclick="showSection('write')">✍️ Schrijven</button>
+    <button onclick="showSection('phrases')">💬 Zinnen</button>
+    <button onclick="showSection('grammar')">📖 Grammatica</button>
+    <button onclick="showSection('flashcards')">🃏 Flashcards</button>
+    <button onclick="showSection('tips')">💡 Tips</button>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div id="sec-home" class="section-page active">
+  <div class="hero">
+    <h1>Bem-vindo! Welkom! 🇧🇷</h1>
+    <p>Jouw app om Portugees te leren vanaf nul.</p>
+  </div>
+  <div class="container">
+    <div class="home-grid">
+      <div class="home-card" onclick="showSection('vocab')"><div class="icon">📚</div><h3>Woordenschat</h3><p>Ontdek woorden per categorie</p></div>
+      <div class="home-card" onclick="showSection('quiz')"><div class="icon">🧠</div><h3>Quiz</h3><p>Test je kennis</p></div>
+      <div class="home-card" onclick="showSection('write')"><div class="icon">✍️</div><h3>Schrijven</h3><p>Oefen door vertalingen te schrijven</p></div>
+      <div class="home-card" onclick="showSection('phrases')"><div class="icon">💬</div><h3>Handige zinnen</h3><p>Zinnen voor elke dag</p></div>
+      <div class="home-card" onclick="showSection('grammar')"><div class="icon">📖</div><h3>Grammatica</h3><p>Basisregels van het Portugees</p></div>
+      <div class="home-card" onclick="showSection('flashcards')"><div class="icon">🃏</div><h3>Flashcards</h3><p>Onthoud door herhaling</p></div>
+      <div class="home-card" onclick="showSection('tips')"><div class="icon">💡</div><h3>Uitspraaktips</h3><p>Klanken en handige trucs</p></div>
+    </div>
+    <div class="tip-box">
+      <h3>Tip van de dag</h3>
+      <p id="dailyTip"></p>
+    </div>
+  </div>
+</div>
+
+<!-- VOCAB -->
+<div id="sec-vocab" class="section-page">
+  <div class="container">
+    <h2>📚 Woordenschat</h2>
+    <div class="search-bar"><input type="text" id="vocabSearch" placeholder="Zoek een woord..." oninput="filterVocab()"></div>
+    <div class="cat-tabs" id="catTabs"></div>
+    <table class="vocab-table" id="vocabTable">
+      <thead><tr><th>Nederlands</th><th>Portugees (Brasileiro)</th><th></th></tr></thead>
+      <tbody id="vocabBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div id="sec-quiz" class="section-page">
+  <div class="container">
+    <h2>🧠 Quiz</h2>
+    <div class="quiz-area">
+      <div class="quiz-dir">
+        <button class="active" onclick="setQuizDir('nl2pt',this)">NL &rarr; PT</button>
+        <button onclick="setQuizDir('pt2nl',this)">PT &rarr; NL</button>
+      </div>
+      <div class="quiz-card">
+        <div class="quiz-word" id="quizWord"></div>
+        <div class="quiz-hint" id="quizHint">Wat is de vertaling?</div>
+        <div class="quiz-options" id="quizOptions"></div>
+        <div class="quiz-score" id="quizScore"></div>
+        <button class="quiz-next" id="quizNext" onclick="nextQuiz()">Volgende</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WRITE -->
+<div id="sec-write" class="section-page">
+  <div class="container">
+    <h2>✍️ Oefen met schrijven</h2>
+    <div class="write-area">
+      <div class="write-card">
+        <div class="write-prompt" id="writePrompt"></div>
+        <div class="write-lang" id="writeLang">Schrijf in het Portugees</div>
+        <input class="write-input" id="writeInput" placeholder="Typ de vertaling..." onkeydown="if(event.key==='Enter')checkWrite()">
+        <div class="write-answer" id="writeAnswer"></div>
+        <div class="write-btns">
+          <button class="btn-check" onclick="checkWrite()">Controleren</button>
+          <button class="btn-skip" onclick="skipWrite()">Overslaan</button>
+        </div>
+      </div>
+      <div class="quiz-score" id="writeScore"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PHRASES -->
+<div id="sec-phrases" class="section-page">
+  <div class="container">
+    <h2>💬 Handige Zinnen</h2>
+    <div class="cat-tabs" id="phraseCatTabs"></div>
+    <div id="phrasesList"></div>
+  </div>
+</div>
+
+<!-- GRAMMAR -->
+<div id="sec-grammar" class="section-page">
+  <div class="container">
+    <h2>📖 Basisgrammatica Portugees</h2>
+    <div id="grammarContent"></div>
+  </div>
+</div>
+
+<!-- FLASHCARDS -->
+<div id="sec-flashcards" class="section-page">
+  <div class="container">
+    <h2>🃏 Flashcards</h2>
+    <div class="flash-area">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="flashcard-inner">
+          <div class="flashcard-front"><div class="word" id="flashFront"></div><div class="sub">Klik om de vertaling te zien</div></div>
+          <div class="flashcard-back"><div class="word" id="flashBack"></div><div class="sub">Portugees (Brasileiro)</div></div>
+        </div>
+      </div>
+      <div class="flash-controls">
+        <button class="flash-prev" onclick="prevFlash()">Vorige</button>
+        <button class="flash-next" onclick="nextFlash()">Volgende</button>
+      </div>
+      <div class="flash-counter" id="flashCounter"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TIPS -->
+<div id="sec-tips" class="section-page">
+  <div class="container">
+    <h2>💡 Uitspraaktips</h2>
+    <div id="tipsContent"></div>
+  </div>
+</div>
+
+<footer>Leer Portugees! 🇧🇷 - Gemaakt met &#10084;&#65039; om Portugees te leren</footer>
+
+<script>
+// ============ DATA ============
+const vocabData = {
+  "Mensen en familie": [
+    ["jonge vrouw","moca"],["jonge man","moco"],["echtgenoot","esposo"],["moeder","mae"],["tante","tia"],["oom","tio"],["oma","avo"],["kleindochter","neta"],["neef","sobrinho"],["neef/nicht","primo"],["schoonvader","sogro"],["schoonmoeder","sogra"],["bruid","noiva"],["bruidegom","novio"],["collega","colega"],["collega","colega de trabalho"],["gast","convidado"],["stel","casal"],["buurman","vizinho"],["buurt","vizinhanca"],["buitenlander","estrangeiro"],["jongen","menino"],["meisje","menina"]
+  ],
+  "Huis en voorwerpen": [
+    ["boek","livro"],["rugzak","mochila"],["tablet","tablet"],["stoel","cadeira"],["tafel","mesa"],["bed","cama"],["koelkast","geladeira"],["kast","armario"],["badkamer","banheiro"],["beker","copo"],["bord","prato"],["fles","garrafa"],["handdoek","toalha"],["lamp","lampada"],["kleed","tapete"],["doos","caixa"],["horloge","relogio"],["spiegel","espelho"],["douche","chuveiro"],["wasbak","pia"],["magnetron","microondas"],["ventilator","ventilador"],["waslijn","varal"],["balkon","sacada"],["boekenkast","estante"],["kussen","almofada"]
+  ],
+  "Eten en drinken": [
+    ["kip","frango"],["watermeloen","melancia"],["meloen","melao"],["ananas","abacaxi"],["papaja","mamao"],["mango","manga"],["cashew","caju"],["acerola","acerola"],["zuurzak","graviola"],["guave","goiaba"],["sinaasappel","laranja"],["peer","pera"],["appel","maca"],["aardbei","morango"],["aardappel","batata"],["bonen","feijao"],["melk","leite"],["kaas","queijo"],["brood","pao"],["cake","bolo"],["salade","salada"],["suiker","acucar"],["olie","oleo"],["boter","manteiga"],["koffie","cafe"],["lunch","almoco"],["diner","jantar"],["sap","suco"],["frisdrank","refrigerante"]
+  ],
+  "Kleding en accessoires": [
+    ["jas","casaco"],["jurk","vestido"],["shirt","camisa"],["rok","saia"],["broek","calca"],["pak","terno"],["schoen","sapato"],["laarzen","botas"],["hoed","chapeu"],["sjaal","cachecol"],["riem","cinto"],["tas","bolsa"],["ketting","colar"],["oorbellen","brincos"],["handschoenen","luvas"],["sok","meia"],["pyjama","pijama"],["kleding","roupa"],["ondergoed","roupa intima"],["bikini","biquini"],["zwembroek","sunga"]
+  ],
+  "Plaatsen en stad": [
+    ["park","parque"],["winkelcentrum","shopping"],["markt","mercado"],["winkel","loja"],["bakkerij","padaria"],["straat","rua"],["plein","praca"],["parkeerplaats","estacionamento"],["bank","banco"],["school","escola"],["universiteit","faculdade"],["bedrijf","empresa"],["kantoor","escritorio"],["restaurant","restaurante"],["luchthaven","aeroporto"],["station","estacao"],["dierentuin","zoologico"],["strand","praia"]
+  ],
+  "Vervoer": [
+    ["trein","trem"],["bus","onibus"],["fiets","bicicleta"],["auto","carro"],["boot","barco"],["motor","moto"],["vliegtuig","aviao"],["metro","metro"],["lopen","caminhar"],["reizen","viajar"],["aankomen","chegar"],["vertrekken","sair"],["rijden","dirigir"]
+  ],
+  "Tijd en weer": [
+    ["vroeg","cedo"],["laat","tarde"],["nu","agora"],["morgen","amanha"],["gisteren","ontem"],["vandaag","hoje"],["januari","janeiro"],["februari","fevereiro"],["maart","marco"],["april","abril"],["mei","maio"],["juni","junho"],["juli","julho"],["augustus","agosto"],["september","setembro"],["oktober","outubro"],["november","novembro"],["december","dezembro"],["zomer","verao"],["winter","inverno"],["herfst","outono"],["lente","primavera"],["koud","frio"],["warm","calor"],["regen","chuva"],["wind","vento"],["storm","tempestade"]
+  ],
+  "Onderwijs en werk": [
+    ["cursus","curso"],["les","aula"],["opdracht","tarefa"],["leraar","professor"],["student","aluno"],["studeren","estudar"],["lesgeven","ensinar"],["nakijken","revisar"],["toets","prova"],["project","projeto"],["onderzoek","pesquisa"],["ingenieur","engenheiro"],["manager","gerente"],["arts","medico"],["advocaat","advogado"]
+  ],
+  "Werkwoorden": [
+    ["gaan","ir"],["komen","vir"],["zien","ver"],["luisteren","ouvir"],["spreken","falar"],["eten","comer"],["drinken","beber"],["studeren","estudar"],["werken","trabalhar"],["wonen","morar"],["reizen","viajar"],["kopen","comprar"],["verkopen","vender"],["openen","abrir"],["sluiten","fechar"],["binnenkomen","entrar"],["vertrekken","sair"],["vinden","encontrar"],["zoeken","procurar"],["helpen","ajudar"],["gebruiken","usar"],["meenemen","levar"],["brengen","trazer"]
+  ],
+  "Emoties en toestanden": [
+    ["blij","feliz"],["verdrietig","triste"],["bezorgd","preocupado"],["moe","cansado"],["enthousiast","animado"],["zelfverzekerd","confiante"],["nerveus","nervoso"],["bang","com medo"],["hongerig","com fome"],["dorstig","com sede"],["ziek","doente"],["gezond","saudavel"],["ontspannen","relaxado"],["verveeld","entediado"]
+  ],
+  "Kleuren en beschrijvingen": [
+    ["rood","vermelho"],["blauw","azul"],["groen","verde"],["geel","amarelo"],["zwart","preto"],["wit","branco"],["grijs","cinza"],["roze","rosa"],["paars","roxo"],["bruin","marrom"],["mooi","bonito"],["lelijk","feio"],["groot","grande"],["klein","pequeno"],["lang","alto"],["kort","baixo"],["oud","velho"],["nieuw","novo"]
+  ],
+  "Technologie": [
+    ["telefoon","celular"],["computer","computador"],["printer","impressora"],["oplader","carregador"],["app","aplicativo"],["internet","internet"],["telefoon","telefone"],["tablet","tablet"]
+  ],
+  "Natuur en dieren": [
+    ["hond","cachorro"],["kat","gato"],["paard","cavalo"],["koe","vaca"],["vogel","passaro"],["insect","inseto"],["slang","cobra"],["bos","floresta"],["woestijn","deserto"],["zee","mar"],["strand","praia"],["zand","areia"],["zon","sol"],["maan","lua"],["wind","vento"],["plant","planta"],["boom","arvore"]
+  ],
+  "Winkelen en diensten": [
+    ["geld","dinheiro"],["kaart","cartao"],["kassa","caixa"],["rij","fila"],["aanbieding","promocao"],["prijs","preco"],["kopen","comprar"],["verkopen","vender"],["ruilen","trocar"],["terugbrengen","devolver"],["bon","recibo"]
+  ],
+  "Dagelijkse routine": [
+    ["schoonmaken","limpar"],["wassen","lavar"],["koken","cozinhar"],["vegen","varrer"],["strijken","passar"],["drogen","secar"],["opruimen","arrumar"],["voorbereiden","preparar"],["organiseren","organizar"]
+  ],
+  "Veelgebruikte uitdrukkingen": [
+    ["hallo","oi"],["tot later","ate logo"],["alstublieft","por favor"],["bedankt","obrigado"],["sorry","desculpa"],["excuseer","com licenca"],["alles goed","tudo bem"],["jammer","que pena"],["wat een geluk","que sorte"],["wauw","nossa"],["serieus","serio"],["dus","entao"]
+  ]
+};
+
+const phrasesData = {
+  "Mensen en relaties": [
+    ["Ik ben student.","Eu sou estudante."],
+    ["De jonge vrouw is erg aardig.","A moca e muito simpatica."],
+    ["Mijn broer woont hier.","O meu irmao mora aqui."],
+    ["Mijn moeder werkt veel.","A minha mae trabalha muito."],
+    ["Wij zijn collega's.","Nos somos colegas."],
+    ["De buurman is buitenlander.","O vizinho e estrangeiro."]
+  ],
+  "Huis en voorwerpen": [
+    ["Het boek ligt op tafel.","O livro esta na mesa."],
+    ["De stoel is comfortabel.","A cadeira e confortavel."],
+    ["De rugzak is in de kamer.","A mochila esta no quarto."],
+    ["De beker is vol.","O copo esta cheio."],
+    ["De koelkast is in de keuken.","A geladeira esta na cozinha."]
+  ],
+  "Eten en drinken": [
+    ["Ik eet brood bij het ontbijt.","Eu como pao no cafe da manha."],
+    ["Ik drink elke dag koffie.","Eu bebo cafe todos os dias."],
+    ["De watermeloen is zoet.","A melancia e doce."],
+    ["Wij eten rijst en bonen.","Nos comemos arroz e feijao."],
+    ["Ik hou van mangosap.","Eu gosto de suco de manga."]
+  ],
+  "Kleding": [
+    ["Ik draag een zwarte jas.","Eu uso um casaco preto."],
+    ["De jurk is mooi.","O vestido e bonito."],
+    ["Zij koopt een nieuw shirt.","Ela compra uma camisa nova."],
+    ["Ik heb comfortabele schoenen.","Eu tenho um sapato confortavel."]
+  ],
+  "Plaatsen en stad": [
+    ["Ik ga naar de markt.","Eu vou ao mercado."],
+    ["Het restaurant is goed.","O restaurante e bom."],
+    ["Het park is dicht bij mijn huis.","O parque e perto da minha casa."],
+    ["De winkel opent om acht uur.","A loja abre as oito."]
+  ],
+  "Vervoer": [
+    ["Ik ga met de fiets naar het werk.","Eu vou de bicicleta ao trabalho."],
+    ["De trein komt vroeg aan.","O trem chega cedo."],
+    ["Wij reizen met de auto.","Nos viajamos de carro."],
+    ["De bus is vol.","O onibus esta cheio."]
+  ],
+  "Tijd en weer": [
+    ["Vandaag is het warm.","Hoje faz calor."],
+    ["Morgen is het koud.","Amanha faz frio."],
+    ["In januari is het zomer in Brazilie.","Em janeiro e verao no Brasil."],
+    ["Nu regent het.","Agora esta chovendo."]
+  ],
+  "Onderwijs en werk": [
+    ["Ik studeer aan de universiteit.","Eu estudo na faculdade."],
+    ["De leraar legt goed uit.","O professor explica bem."],
+    ["Ik heb vandaag een opdracht.","Eu tenho uma tarefa hoje."],
+    ["Zij werkt op kantoor.","Ela trabalha no escritorio."]
+  ],
+  "Werkwoorden": [
+    ["Ik ga naar het park.","Eu vou ao parque."],
+    ["Ik zie de hond.","Eu vejo o cachorro."],
+    ["Wij kopen eten.","Nos compramos comida."],
+    ["Hij werkt veel.","Ele trabalha muito."],
+    ["Ik zoek mijn boek.","Eu procuro o meu livro."]
+  ],
+  "Emoties": [
+    ["Ik ben vandaag blij.","Eu estou feliz hoje."],
+    ["Zij is verdrietig.","Ela esta triste."],
+    ["Ik ben moe.","Eu estou cansado."],
+    ["Zij zijn enthousiast.","Eles estao animados."]
+  ],
+  "Kleuren": [
+    ["Het huis is wit.","A casa e branca."],
+    ["De auto is zwart.","O carro e preto."],
+    ["De jurk is rood.","O vestido e vermelho."],
+    ["Het boek is klein.","O livro e pequeno."]
+  ],
+  "Technologie": [
+    ["Ik gebruik de computer.","Eu uso o computador."],
+    ["De telefoon ligt op tafel.","O celular esta na mesa."],
+    ["De printer werkt niet.","A impressora nao funciona."]
+  ],
+  "Natuur en dieren": [
+    ["De hond rent in het park.","O cachorro corre no parque."],
+    ["De kat slaapt in huis.","O gato dorme na casa."],
+    ["De zon is sterk.","O sol esta forte."],
+    ["De boom is groot.","A arvore e grande."]
+  ],
+  "Winkelen": [
+    ["Ik koop een shirt.","Eu compro uma camisa."],
+    ["De prijs is hoog.","O preco e alto."],
+    ["Ik betaal met kaart.","Eu pago com cartao."],
+    ["De winkel heeft een aanbieding.","A loja tem promocao."]
+  ],
+  "Dagelijkse routine": [
+    ["Ik sta vroeg op.","Eu acordo cedo."],
+    ["Ik werk in de ochtend.","Eu trabalho de manha."],
+    ["Ik maak het huis schoon.","Eu limpo a casa."],
+    ["Ik kook het diner.","Eu cozinho o jantar."]
+  ],
+  "Uitdrukkingen": [
+    ["Hallo, alles goed?","Oi, tudo bem?"],
+    ["Aangenaam.","Muito prazer."],
+    ["Tot later.","Ate logo."],
+    ["Bedankt.","Obrigado."],
+    ["Excuseer.","Com licenca."]
+  ]
+};
+
+const grammarContent = [
+  {
+    title: "Geslacht: mannelijk en vrouwelijk",
+    content: "Het Portugees heeft twee geslachten. Mannelijke woorden eindigen vaak op <strong>-o</strong> en vrouwelijke op <strong>-a</strong>. Lidwoorden: <strong>o/um</strong> (mannelijk) en <strong>a/uma</strong> (vrouwelijk).",
+    examples: ["o livro (het boek), a mesa (de tafel)", "um carro (een auto), uma casa (een huis)"]
+  },
+  {
+    title: "Woordvolgorde (SVO)",
+    content: "De basisstructuur is Onderwerp + Werkwoord + Lijdend voorwerp, vergelijkbaar met het Nederlands. In vragen verandert de intonatie, de woordvolgorde blijft vaak hetzelfde.",
+    examples: ["Eu como pao. (Ik eet brood.)", "Voce come pao? (Eet jij brood?)"]
+  },
+  {
+    title: "Regelmatige werkwoorden in de tegenwoordige tijd",
+    content: "Er zijn drie groepen: <strong>-ar</strong> (falar), <strong>-er</strong> (comer), <strong>-ir</strong> (partir). Verwijder de uitgang en voeg de juiste vervoeging toe.",
+    examples: ["falar: eu falo, voce fala, nos falamos", "comer: eu como, voce come, nos comemos", "partir: eu parto, voce parte, nos partimos"]
+  },
+  {
+    title: "Ontkenning met 'nao'",
+    content: "Zet <strong>nao</strong> voor het werkwoord om een zin te ontkennen. Heel eenvoudig!",
+    examples: ["Eu nao trabalho. (Ik werk niet.)", "Ele nao tem carro. (Hij heeft geen auto.)"]
+  },
+  {
+    title: "Persoonlijke voornaamwoorden",
+    content: "De basisvoornaamwoorden zijn: <strong>eu</strong> (ik), <strong>voce</strong> (jij/u), <strong>ele/ela</strong> (hij/zij), <strong>nos</strong> (wij), <strong>voces</strong> (jullie), <strong>eles/elas</strong> (zij).",
+    examples: ["Eu sou estudante. (Ik ben student.)", "Ela e professora. (Zij is lerares.)"]
+  },
+  {
+    title: "Meervoud van zelfstandige naamwoorden",
+    content: "Voeg meestal <strong>-s</strong> toe. Woorden op een medeklinker krijgen <strong>-es</strong>. Woorden op <strong>-ao</strong> worden <strong>-oes</strong>.",
+    examples: ["livro > livros (boeken)", "flor > flores (bloemen)", "cao > caes (honden)"]
+  },
+  {
+    title: "Werkwoord 'ser' (zijn - permanent)",
+    content: "Vervoeging: <strong>eu sou</strong>, <strong>voce e</strong>, <strong>ele/ela e</strong>, <strong>nos somos</strong>, <strong>voces sao</strong>, <strong>eles/elas sao</strong>. Gebruikt voor permanente eigenschappen.",
+    examples: ["Eu sou brasileiro. (Ik ben Braziliaan.)", "Nos somos amigos. (Wij zijn vrienden.)"]
+  },
+  {
+    title: "Werkwoord 'estar' (zijn - tijdelijk)",
+    content: "Vervoeging: <strong>eu estou</strong>, <strong>voce esta</strong>, <strong>ele/ela esta</strong>, <strong>nos estamos</strong>. Gebruikt voor tijdelijke toestanden en locaties.",
+    examples: ["Eu estou feliz. (Ik ben blij.)", "Ela esta em casa. (Zij is thuis.)"]
+  },
+  {
+    title: "Werkwoord 'ter' (hebben)",
+    content: "Vervoeging: <strong>eu tenho</strong>, <strong>voce tem</strong>, <strong>ele/ela tem</strong>, <strong>nos temos</strong>, <strong>voces tem</strong>, <strong>eles/elas tem</strong>.",
+    examples: ["Eu tenho um livro. (Ik heb een boek.)", "Ela tem um cachorro. (Zij heeft een hond.)"]
+  },
+  {
+    title: "Verschil tussen 'ser' en 'estar'",
+    content: "Dit is uniek voor Portugees! <strong>Ser</strong> = permanente eigenschap. <strong>Estar</strong> = tijdelijke toestand. In het Nederlands gebruiken we voor beide 'zijn'.",
+    examples: ["Ele e alto. (Hij is lang. - altijd)", "Ele esta cansado. (Hij is moe. - nu)"]
+  }
+];
+
+const tipsData = [
+  { title: "De klank 'ao'", desc: "De combinatie 'ao' klinkt als een nasale 'au'. Het wordt door de neus uitgesproken.", example: "pao (brood), mao (hand), nao (nee)" },
+  { title: "De klank 'nh'", desc: "De combinatie 'nh' klinkt als 'nj' in het Nederlands, vergelijkbaar met het Spaanse n.", example: "banho (bad), vinho (wijn), minha (mijn)" },
+  { title: "De klank 'lh'", desc: "De combinatie 'lh' klinkt als 'lj', vergelijkbaar met het Italiaanse 'gl'.", example: "trabalho (werk), filho (zoon), olho (oog)" },
+  { title: "De klank 'c' met cedille", desc: "De 'c' is een 's'-klank voor a, o, u. Vergelijkbaar met de Nederlandse 's'.", example: "acao (actie), preco (prijs), franca (Frans)" },
+  { title: "De 'r' aan het begin", desc: "De 'r' aan het begin van een woord wordt uitgesproken als een 'h' in het Engels of een zachte 'g'.", example: "rio (rivier), rua (straat), restaurante" },
+  { title: "De dubbele 'rr'", desc: "De dubbele 'rr' klinkt hetzelfde als de begin-'r': als een 'h'-achtige klank.", example: "carro (auto), cachorro (hond), terra (aarde)" },
+  { title: "Klemtoon en accenten", desc: "Het accent geeft aan waar de klemtoon valt. Acuut accent (e) = open klank, circumflex (e) = gesloten klank.", example: "cafe (koffie), voce (jij), avo (opa)" },
+  { title: "De nasale klinkers", desc: "Klinkers gevolgd door 'm' of 'n' zijn nasaal. Ze worden deels door de neus uitgesproken.", example: "bom (goed), canto (hoek), mundo (wereld)" },
+  { title: "De klank 'x'", desc: "De letter 'x' kan vier klanken hebben: 'sj', 's', 'z' of 'ks'. Het hangt af van het woord.", example: "xicara (sj), proximo (s), exame (z), taxi (ks)" },
+  { title: "De klank 'ge' en 'gi'", desc: "De 'g' voor 'e' en 'i' klinkt als 'zj' (als de 'j' in het Frans).", example: "gente (mensen), girafa (giraffe)" },
+  { title: "Verkleinwoorden met '-inho'", desc: "Het Portugees gebruikt veel verkleinwoorden! Voeg '-inho' (m) of '-inha' (v) toe.", example: "casa > casinha (huisje), gato > gatinho (katje)" },
+  { title: "De klank 'ou'", desc: "De combinatie 'ou' klinkt als een gesloten 'o'. In het dagelijks taalgebruik klinkt het soms gewoon als 'o'.", example: "ou (of), ouvir (horen), pouco (weinig)" }
+];
+
+const dailyTips = [
+  "Het Portugees heeft twee werkwoorden voor 'zijn': 'ser' (permanent) en 'estar' (tijdelijk)!",
+  "'Obrigado' zeg je als man, 'obrigada' als vrouw. Let op het geslacht!",
+  "De 'r' aan het begin van een woord klinkt als 'h' in het Portugees.",
+  "Verkleinwoorden zijn heel populair: 'cafezinho' = klein kopje koffie (en gezelligheid!).",
+  "In het Portugees is 'saudade' een uniek woord: het gevoel van verlangen naar iets of iemand.",
+  "'Tudo bem?' is de meest gebruikte begroeting in Brazilie. Het betekent 'alles goed?'",
+  "Het meervoud wordt meestal gemaakt met -s: livro > livros, casa > casas.",
+  "'Nao' voor het werkwoord maakt de zin ontkennend: 'Eu nao sei' = 'Ik weet het niet'."
+];
+
+// ============ STATE ============
+let currentCat = null;
+let allWords = [];
+let quizScore = {correct:0, total:0};
+let quizCurrent = null;
+let quizDir = 'nl2pt';
+let writeScore = {correct:0, total:0};
+let writeCurrent = null;
+let flashIndex = 0;
+let flashWords = [];
+
+// ============ INIT ============
+function init() {
+  for (const cat in vocabData) {
+    vocabData[cat].forEach(w => allWords.push({nl: w[0], pt: w[1], cat: cat}));
+  }
+  flashWords = [...allWords].sort(() => Math.random() - 0.5);
+  document.getElementById('dailyTip').textContent = dailyTips[Math.floor(Math.random() * dailyTips.length)];
+  buildCatTabs();
+  buildPhraseCatTabs();
+  buildGrammar();
+  buildTips();
+  showVocab(Object.keys(vocabData)[0]);
+  loadQuiz();
+  loadWrite();
+  loadFlash();
+}
+
+function buildCatTabs() {
+  const c = document.getElementById('catTabs');
+  c.innerHTML = '<button class="cat-tab active" onclick="showVocab(null)">Alle</button>';
+  for (const cat in vocabData) {
+    c.innerHTML += '<button class="cat-tab" onclick="showVocab(\'' + cat.replace(/'/g,"\\'") + '\')">' + cat + '</button>';
+  }
+}
+
+function buildPhraseCatTabs() {
+  const c = document.getElementById('phraseCatTabs');
+  c.innerHTML = '<button class="cat-tab active" onclick="showPhrases(null)">Alle</button>';
+  for (const cat in phrasesData) {
+    c.innerHTML += '<button class="cat-tab" onclick="showPhrases(\'' + cat.replace(/'/g,"\\'") + '\')">' + cat + '</button>';
+  }
+  showPhrases(null);
+}
+
+function buildGrammar() {
+  const c = document.getElementById('grammarContent');
+  grammarContent.forEach(g => {
+    let h = '<div class="grammar-block"><h3>' + g.title + '</h3><p>' + g.content + '</p>';
+    g.examples.forEach(e => { h += '<div class="example">' + e + '</div>'; });
+    h += '</div>';
+    c.innerHTML += h;
+  });
+}
+
+function buildTips() {
+  const c = document.getElementById('tipsContent');
+  tipsData.forEach(t => {
+    c.innerHTML += '<div class="tip-card"><h3>' + t.title + '</h3><p>' + t.desc + '</p><div class="tip-example">' + t.example + '</div></div>';
+  });
+}
+
+// ============ NAVIGATION ============
+function showSection(id) {
+  document.querySelectorAll('.section-page').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
+  const labels = {'home':'Home','vocab':'Woordenschat','quiz':'Quiz','write':'Schrijven','phrases':'Zinnen','grammar':'Grammatica','flashcards':'Flashcards','tips':'Tips'};
+  document.querySelectorAll('.nav-links button').forEach(b => {
+    if(b.textContent.includes(labels[id])) b.classList.add('active');
+  });
+  document.querySelector('.nav-links').classList.remove('open');
+  window.scrollTo(0,0);
+}
+
+function toggleMenu() {
+  document.querySelector('.nav-links').classList.toggle('open');
+}
+
+// ============ VOCAB ============
+function showVocab(cat) {
+  currentCat = cat;
+  const body = document.getElementById('vocabBody');
+  let words = cat ? vocabData[cat].map(w => ({nl:w[0],pt:w[1]})) : allWords;
+  body.innerHTML = '';
+  words.forEach(w => {
+    body.innerHTML += '<tr><td class="nl">' + w.nl + '</td><td class="pt">' + w.pt + '</td><td><button class="audio-btn" onclick="speak(\'' + w.pt.replace(/'/g,"\\'") + '\')" title="Luister naar uitspraak">🔊</button></td></tr>';
+  });
+  document.querySelectorAll('#catTabs .cat-tab').forEach((b,i) => {
+    b.classList.toggle('active', cat === null ? i === 0 : b.textContent === cat);
+  });
+}
+
+function filterVocab() {
+  const q = document.getElementById('vocabSearch').value.toLowerCase();
+  document.querySelectorAll('#vocabBody tr').forEach(r => {
+    r.style.display = r.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+function speak(text) {
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'pt-BR';
+  u.rate = 0.85;
+  speechSynthesis.speak(u);
+}
+
+// ============ QUIZ ============
+function setQuizDir(dir, btn) {
+  quizDir = dir;
+  document.querySelectorAll('.quiz-dir button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  quizScore = {correct:0, total:0};
+  loadQuiz();
+}
+
+function loadQuiz() {
+  const word = allWords[Math.floor(Math.random() * allWords.length)];
+  quizCurrent = word;
+  const showWord = quizDir === 'nl2pt' ? word.nl : word.pt;
+  const correctAnswer = quizDir === 'nl2pt' ? word.pt : word.nl;
+  document.getElementById('quizWord').textContent = showWord;
+  document.getElementById('quizHint').textContent = 'Categorie: ' + word.cat;
+
+  let options = [correctAnswer];
+  const pool = allWords.map(w => quizDir === 'nl2pt' ? w.pt : w.nl);
+  while(options.length < 4) {
+    const r = pool[Math.floor(Math.random() * pool.length)];
+    if(!options.includes(r)) options.push(r);
+  }
+  options.sort(() => Math.random() - 0.5);
+
+  const container = document.getElementById('quizOptions');
+  container.innerHTML = '';
+  options.forEach(o => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-opt';
+    btn.textContent = o;
+    btn.onclick = function() { checkQuiz(this, o); };
+    container.appendChild(btn);
+  });
+  document.getElementById('quizNext').style.display = 'none';
+  updateQuizScore();
+}
+
+function checkQuiz(btn, answer) {
+  const correct = quizDir === 'nl2pt' ? quizCurrent.pt : quizCurrent.nl;
+  quizScore.total++;
+  document.querySelectorAll('.quiz-opt').forEach(b => {
+    b.onclick = null;
+    if(b.textContent === correct) b.classList.add('correct');
+  });
+  if(answer === correct) {
+    quizScore.correct++;
+    btn.classList.add('correct');
+  } else {
+    btn.classList.add('wrong');
+  }
+  document.getElementById('quizNext').style.display = 'inline-block';
+  updateQuizScore();
+}
+
+function nextQuiz() { loadQuiz(); }
+function updateQuizScore() {
+  document.getElementById('quizScore').textContent = 'Score: ' + quizScore.correct + '/' + quizScore.total;
+}
+
+// ============ WRITE ============
+function loadWrite() {
+  const word = allWords[Math.floor(Math.random() * allWords.length)];
+  writeCurrent = word;
+  document.getElementById('writePrompt').textContent = word.nl;
+  document.getElementById('writeLang').textContent = 'Schrijf in het Portugees (' + word.cat + ')';
+  document.getElementById('writeInput').value = '';
+  document.getElementById('writeInput').className = 'write-input';
+  document.getElementById('writeAnswer').textContent = '';
+  updateWriteScore();
+}
+
+function checkWrite() {
+  const input = document.getElementById('writeInput').value.trim().toLowerCase();
+  const correct = writeCurrent.pt.toLowerCase();
+  writeScore.total++;
+  if(input === correct) {
+    writeScore.correct++;
+    document.getElementById('writeInput').classList.add('correct');
+    document.getElementById('writeAnswer').textContent = 'Goed! ✅';
+    document.getElementById('writeAnswer').style.color = '#10b981';
+  } else {
+    document.getElementById('writeInput').classList.add('wrong');
+    document.getElementById('writeAnswer').textContent = 'Antwoord: ' + writeCurrent.pt;
+    document.getElementById('writeAnswer').style.color = '#ef4444';
+  }
+  updateWriteScore();
+  setTimeout(loadWrite, 2000);
+}
+
+function skipWrite() {
+  document.getElementById('writeAnswer').textContent = 'Antwoord: ' + writeCurrent.pt;
+  document.getElementById('writeAnswer').style.color = '#6b7280';
+  setTimeout(loadWrite, 1500);
+}
+
+function updateWriteScore() {
+  document.getElementById('writeScore').textContent = 'Score: ' + writeScore.correct + '/' + writeScore.total;
+}
+
+// ============ PHRASES ============
+function showPhrases(cat) {
+  const container = document.getElementById('phrasesList');
+  container.innerHTML = '';
+  const cats = cat ? {[cat]: phrasesData[cat]} : phrasesData;
+  for (const c in cats) {
+    cats[c].forEach(p => {
+      container.innerHTML += '<div class="phrase-card"><div class="phrase-nl">' + p[0] + '</div><div class="phrase-pt">' + p[1] + ' <button class="audio-btn" onclick="speak(\'' + p[1].replace(/'/g,"\\'") + '\')" title="Luister">🔊</button></div></div>';
+    });
+  }
+  document.querySelectorAll('#phraseCatTabs .cat-tab').forEach((b,i) => {
+    b.classList.toggle('active', cat === null ? i === 0 : b.textContent === cat);
+  });
+}
+
+// ============ FLASHCARDS ============
+function loadFlash() {
+  if(flashWords.length === 0) return;
+  const w = flashWords[flashIndex];
+  document.getElementById('flashFront').textContent = w.nl;
+  document.getElementById('flashBack').textContent = w.pt;
+  document.getElementById('flashcard').classList.remove('flipped');
+  document.getElementById('flashCounter').textContent = (flashIndex+1) + ' / ' + flashWords.length;
+}
+
+function flipCard() { document.getElementById('flashcard').classList.toggle('flipped'); }
+function nextFlash() { flashIndex = (flashIndex + 1) % flashWords.length; loadFlash(); }
+function prevFlash() { flashIndex = (flashIndex - 1 + flashWords.length) % flashWords.length; loadFlash(); }
+
+// ============ START ============
+init();
+</script>
+</body>
+</html>
